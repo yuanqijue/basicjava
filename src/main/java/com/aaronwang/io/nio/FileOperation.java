@@ -1,5 +1,6 @@
 package com.aaronwang.io.nio;
 
+import io.netty.buffer.ByteBuf;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.*;
@@ -76,6 +77,8 @@ public class FileOperation {
             }
             buffer.clear();
         }
+
+        // Netty ByteBuf
 
         // byte[] to Byte[] 内存拷贝
         content.addAll(0, Arrays.asList(ArrayUtils.toObject("modifyFileWithChannel 开始添加第一行 作者 王恒定\n".getBytes())));//
