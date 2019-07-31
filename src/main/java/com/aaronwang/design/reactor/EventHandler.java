@@ -1,6 +1,6 @@
 package com.aaronwang.design.reactor;
 
-import java.nio.channels.SelectionKey;
+import java.nio.channels.SocketChannel;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -9,11 +9,11 @@ public abstract class EventHandler {
 
     private static ExecutorService threadPool = Executors.newFixedThreadPool(5);
 
-    public void read(final Object value) {
+    public void read(final SocketChannel channel) {
         threadPool.execute(new Runnable() {
             @Override
             public void run() {
-                doRead(value);
+                doRead(channel);
             }
         });
     }
@@ -23,7 +23,7 @@ public abstract class EventHandler {
     }
 
 
-    public void doRead(Object value) {
+    public void doRead(SocketChannel channel) {
     }
 
     public void doWrite(Object value) {

@@ -1,12 +1,12 @@
 package com.aaronwang.design.reactor;
 
-import org.apache.commons.lang3.ArrayUtils;
-
 import java.io.IOException;
-import java.nio.ByteBuffer;
+import java.net.InetSocketAddress;
 import java.nio.channels.*;
-import java.nio.charset.Charset;
-import java.util.*;
+import java.nio.channels.spi.SelectorProvider;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static java.nio.channels.SelectionKey.OP_ACCEPT;
@@ -19,9 +19,12 @@ public class Reactor {
 
     private Map<Integer, EventHandler> eventHandlerMap = new ConcurrentHashMap<>();
 
-    public Reactor(ServerSocketChannel ssc) throws IOException {
-        this.ssc = ssc;
-        selector = Selector.open();
+    public Reactor(int port) throws IOException {
+        selector = SelectorProvider.provider().openSelector();
+//        this.ssc = ssc;
+        ssc = SelectorProvider.provider().openServerSocketChannel();
+        ssc.configureBlocking(false);
+        ssc.bind(new InetSocketAddress(port));
         //
         SelectionKey key = ssc.register(selector, OP_ACCEPT);
 //        key.attach(key);
@@ -87,30 +90,11 @@ public class Reactor {
 
         SocketChannel channel = (SocketChannel) key.channel();
 
-        ByteBuffer buffer = ByteBuffer.allocate(5);
-        List<Byte> bs = new ArrayList<>();
-        try {
-            while (channel.read(buffer) != -1) {
-                buffer.flip();
-                if (buffer.limit() == 0) {
-                    Thread.sleep(1000);
-                }
-                while (buffer.hasRemaining()) {
-                    bs.add(buffer.get());
-                }
-                buffer.clear();
-            }
-            channel.close();
-        } catch (InterruptedException | IOException e) {
-            e.printStackTrace();
-        }
-        String inputStr = new String(ArrayUtils.toPrimitive(bs.toArray(new Byte[0])), Charset.forName("utf-8"));
-
-
         EventHandler handler = (EventHandler) key.attachment();
         if (handler != null) {
-            handler.read(inputStr);
+            handler.read(channel);
         }
+        key.cancel();
     }
 
     private static void onChannelWritable(SelectionKey key) throws IOException {

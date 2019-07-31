@@ -15,10 +15,7 @@ public class Server {
 
     public static void main(String[] args) throws IOException, InterruptedException {
 
-        ServerSocketChannel ssc = ServerSocketChannel.open();
-        ssc.configureBlocking(false);
-        ssc.bind(new InetSocketAddress(9999));
-        Reactor dispatcher = new Reactor(ssc);
+        Reactor dispatcher = new Reactor(9999);
 
         LoggingHandler loggingHandler = new LoggingHandler();
         dispatcher.registerHandler(loggingHandler, SelectionKey.OP_READ);
