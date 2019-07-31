@@ -79,7 +79,6 @@ public class Reactor {
         SocketChannel socketChannel = serverSocketChannel.accept();
         socketChannel.configureBlocking(false);
         SelectionKey readKey = socketChannel.register(selector, OP_READ);
-        // todo 绑定注册的handler,只绑定了读
         readKey.attach(eventHandlerMap.get(OP_READ));
 
         //https://github.com/netty/netty/issues/924
