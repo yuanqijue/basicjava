@@ -20,6 +20,14 @@
 
     <dependencies>
 
+
+        <!--        object layout-->
+        <dependency>
+            <groupId>org.openjdk.jol</groupId>
+            <artifactId>jol-core</artifactId>
+            <version>0.10</version>
+        </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -38,7 +46,6 @@
             <artifactId>netty-all</artifactId>
             <version>4.1.37.Final</version>
         </dependency>
-
 
 
         <dependency>
